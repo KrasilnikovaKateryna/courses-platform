@@ -1,0 +1,100 @@
+@model List<CoursePlatform.Models.Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+
+@if (TempData["EnrollMessage"] != null)
+{
+<div class="alert alert-info"
+     id="enrollMessage"
+     data-testid="enroll-message">
+    @TempData["EnrollMessage"]
+</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h2 class="mb-0" id="coursesTitle" data-testid="courses-title">Courses</h2>
+
+    @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+    {
+        <a class="btn btn-primary"
+           asp-action="Create"
+           id="createCourseLink"
+           data-testid="create-course-link">
+            Create course
+        </a>
+    }
+</div>
+
+<table class="table table-striped" id="coursesTable" data-testid="courses-table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Teacher</th>
+        <th>Created</th>
+        <th style="width: 320px;">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var c in Model)
+    {
+        <tr id="courseRow_@c.Id" data-course-id="@c.Id" data-testid="course-row">
+            <td class="course-title" data-testid="course-title-cell">@c.Title</td>
+            <td data-testid="course-teacher-cell">@(c.Teacher?.Email ?? "-")</td>
+            <td data-testid="course-created-cell">@c.CreatedAt.ToString("yyyy-MM-dd")</td>
+
+            <td>
+                <a class="btn btn-sm btn-outline-primary me-1"
+                   asp-action="Details"
+                   asp-route-id="@c.Id"
+                   id="detailsCourseBtn_@c.Id"
+                   data-testid="course-details">
+                    Details
+                </a>
+
+                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-sm btn-outline-secondary me-1"
+                       asp-action="Edit" asp-route-id="@c.Id"
+                       id="editCourseBtn_@c.Id"
+                       data-testid="course-edit">
+                        Edit
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-danger me-1"
+                       asp-action="Delete" asp-route-id="@c.Id"
+                       id="deleteCourseBtn_@c.Id"
+                       data-testid="course-delete">
+                        Delete
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-dark"
+                       asp-controller="Enrollments" asp-action="Students" asp-route-courseId="@c.Id"
+                       id="studentsBtn_@c.Id"
+                       data-testid="course-students">
+                        Students
+                    </a>
+                }
+
+                @if (User.IsInRole("Student"))
+                {
+                    <form method="post"
+                          asp-controller="Enrollments"
+                          asp-action="Enroll"
+                          asp-route-courseId="@c.Id"
+                          class="d-inline">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-sm btn-success"
+                                id="enrollBtn_@c.Id"
+                                data-testid="course-enroll">
+                            Enroll
+                        </button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

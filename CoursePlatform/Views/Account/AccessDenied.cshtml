@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Access denied";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="alert alert-warning mt-4" role="alert" id="accessDeniedAlert">
+            <h4 class="alert-heading" id="accessDeniedTitle" data-testid="access-denied-title">Access denied</h4>
+            <p class="mb-3">You do not have permission to access this page.</p>
+            <a class="btn btn-outline-primary" asp-controller="Home" asp-action="Index" id="goHomeBtn" data-testid="access-denied-home">
+                Go to Home
+            </a>
+            <a class="btn btn-link" asp-controller="Account" asp-action="Login" id="goLogin" data-testid="access-denied-login">
+                Login
+            </a>
+        </div>
+    </div>
+</div>

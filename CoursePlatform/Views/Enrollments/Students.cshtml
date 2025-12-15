@@ -1,0 +1,56 @@
+@model List<CoursePlatform.Models.Enrollment>
+@{
+ViewData["Title"] = "Students";
+}
+
+<div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <div>
+        <h2 class="mb-0" id="studentsTitle" data-testid="students-title">Students</h2>
+        <div class="text-muted">
+            Course: <span id="studentsCourseTitle" data-testid="students-course-title">@ViewBag.CourseTitle</span>
+        </div>
+    </div>
+
+    <a class="btn btn-outline-secondary"
+       asp-controller="Courses"
+       asp-action="Index"
+       id="backToCoursesBtn"
+       data-testid="students-back">
+        Back
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+<div class="alert alert-secondary"
+     id="emptyStudents"
+     data-testid="empty-students">
+    No students enrolled.
+</div>
+}
+else
+{
+<table class="table table-striped"
+       id="studentsTable"
+       data-testid="students-table">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Full name</th>
+        <th>Date of birth</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var e in Model)
+    {
+    <tr id="studentRow_@e.StudentId"
+        data-student-id="@e.StudentId"
+        data-testid="student-row">
+        <td class="student-email" data-testid="student-email">@e.Student?.Email</td>
+        <td data-testid="student-fullname">@(e.Student?.FullName ?? "-")</td>
+        <td data-testid="student-dob">@(e.Student?.DateOfBirth?.ToString("yyyy-MM-dd") ?? "-")</td>
+    </tr>
+    }
+    </tbody>
+</table>
+}

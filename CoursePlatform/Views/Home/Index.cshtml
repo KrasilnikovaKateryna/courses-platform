@@ -1,0 +1,111 @@
+﻿@model List<CoursePlatform.Models.Course>
+@{
+ViewData["Title"] = "Home";
+}
+
+<div class="row mt-4 mb-5 align-items-center">
+    <div class="col-md-6">
+        <h1 class="display-5 mb-3" id="homeTitle">CoursePlatform</h1>
+        <p class="lead" id="homeSubtitle">
+            A modern learning management platform for students and teachers.
+        </p>
+        <p>
+            CoursePlatform allows teachers to create courses, students to enroll and manage their learning,
+            and administrators to control the educational process in a single web application.
+        </p>
+
+        <div class="mt-4">
+            <a asp-controller="Courses"
+               asp-action="Index"
+               class="btn btn-primary me-2"
+               id="browseCoursesBtn">
+                Browse courses
+            </a>
+
+            @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+            {
+            <a asp-controller="Courses"
+               asp-action="Create"
+               class="btn btn-outline-secondary"
+               id="homeCreateCourseBtn">
+                Create course
+            </a>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-6 text-center">
+        <img src="~/images/hero.jpg"
+             class="img-fluid rounded shadow-sm"
+             alt="Online learning platform illustration"
+             id="heroImage" />
+    </div>
+</div>
+
+<hr />
+
+<div class="mt-4">
+    <h2 class="mb-4" id="popularCoursesTitle">Popular courses</h2>
+
+    @if (!Model.Any())
+    {
+    <div class="alert alert-secondary" id="noPopularCourses">
+        No courses available yet.
+    </div>
+    }
+    else
+    {
+    <div class="row" id="popularCoursesList">
+        @foreach (var course in Model)
+        {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title course-title">@course.Title</h5>
+                    <p class="card-text text-muted flex-grow-1">
+                        @(string.IsNullOrWhiteSpace(course.Description)
+                        ? "No description provided."
+                        : course.Description)
+                    </p>
+
+                    <div class="small text-muted mb-3">
+                        Teacher: @course.Teacher?.Email
+                    </div>
+
+                    <a asp-controller="Courses"
+                       asp-action="Index"
+                       class="btn btn-sm btn-outline-primary mt-auto"
+                       id="homeCourseLink_@course.Id">
+                        View course
+                    </a>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>
+
+<hr class="mt-5" />
+
+<div class="row mt-4 mb-5">
+    <div class="col-md-10">
+        <h2 id="aboutPlatformTitle">About the platform</h2>
+
+        <p>
+            CoursePlatform is an online learning management system designed to simplify interaction
+            between students and teachers.
+        </p>
+
+        <p>
+            Teachers can create and manage courses, track enrolled students, and update course content.
+            Students can browse available courses, enroll in them, and manage their personal learning dashboard.
+        </p>
+
+        <p>
+            The platform is built using a modern MVC architecture and focuses on reliability, usability,
+            and data consistency. Role-based access control ensures that each user has access only to
+            the functionality relevant to their role.
+        </p>
+    </div>
+</div>

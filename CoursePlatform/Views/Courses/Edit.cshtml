@@ -1,0 +1,62 @@
+@model CoursePlatform.Models.Course
+@{
+ViewData["Title"] = "Edit course";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="mb-3" id="editCourseTitle" data-testid="edit-course-title">Edit course</h3>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                <div class="alert alert-danger" id="validationSummary" data-testid="course-validation-summary">
+                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                    <div>@err.ErrorMessage</div>
+                    }
+                </div>
+                }
+
+                <form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label for="courseTitle" class="form-label">Title</label>
+                        <input id="courseTitle"
+                               name="Title"
+                               class="form-control"
+                               value="@Model.Title"
+                               required
+                               data-testid="course-title" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="courseDescription" class="form-label">Description</label>
+                        <textarea id="courseDescription"
+                                  name="Description"
+                                  class="form-control"
+                                  rows="4"
+                                  data-testid="course-description">@Model.Description</textarea>
+                    </div>
+
+                    @* В тестах мы кликаем по saveCourseBtn — делаем одинаково для Create и Edit *@
+                    <button id="saveCourseBtn"
+                            class="btn btn-primary"
+                            type="submit"
+                            data-testid="course-save">
+                        Save
+                    </button>
+
+                    <a class="btn btn-link"
+                       asp-action="Index"
+                       id="cancelEditCourse"
+                       data-testid="course-cancel-edit">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
